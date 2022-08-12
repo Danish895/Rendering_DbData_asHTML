@@ -6,16 +6,16 @@ using static StudentAPI.Controllers.StudentDetailsController;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options =>
-{
-    // using Microsoft.AspNetCore.Mvc.Formatters;
-    options.OutputFormatters.RemoveType<StringOutputFormatter>();
-    options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
-});
+//builder.Services.AddControllers(options =>
+//{
+//    // using Microsoft.AspNetCore.Mvc.Formatters;
+//    options.OutputFormatters.RemoveType<StringOutputFormatter>();
+//    options.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+//});
 
 // Add services to the container.
-builder.Services.AddMvc(options => options.OutputFormatters.Add(new HtmlOutputFormatter()));
-//builder.Services.AddControllers();
+//builder.Services.AddMvc(options => options.OutputFormatters.Add(new HtmlOutputFormatter()));
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -36,13 +36,13 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-app.UseFileServer(new FileServerOptions
-{
-    FileProvider = new PhysicalFileProvider(
-           Path.Combine(builder.Environment.ContentRootPath, "HtmlRender")),
-    RequestPath = "/StaticFiles",
-    EnableDirectoryBrowsing = true
-});
+//app.UseFileServer(new FileServerOptions
+//{
+//    FileProvider = new PhysicalFileProvider(
+//           Path.Combine(builder.Environment.ContentRootPath, "HtmlRender")),
+//    RequestPath = "/StaticFiles",
+//    EnableDirectoryBrowsing = true
+//});
 
 app.UseAuthorization();
 

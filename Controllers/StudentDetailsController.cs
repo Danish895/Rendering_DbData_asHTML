@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,18 +24,18 @@ namespace StudentAPI.Controllers
         {
             _context = context;
         }
-        public class HtmlOutputFormatter : StringOutputFormatter
-        {
-            public HtmlOutputFormatter()
-            {
-                SupportedMediaTypes.Add("text/html");
-            }
-        }
+        //public class HtmlOutputFormatter : StringOutputFormatter
+        //{
+        //    public HtmlOutputFormatter()
+        //    {
+        //        SupportedMediaTypes.Add("text/html");
+        //    }
+        //}
 
         // GET: api/StudentDetails
         [HttpGet]
-        [Produces("text/html")]
-        [FormatFilter]
+        //[Produces("text/html")]
+        //[FormatFilter]
         public async Task<ActionResult<IEnumerable<StudentDetail>>> GetStudentDetails()
         {
             //return await _context.StudentDetails.ToListAsync();
@@ -45,29 +46,63 @@ namespace StudentAPI.Controllers
             
             List<StudentDetail> Detail = await _context.StudentDetails.ToListAsync();
             {
+
                 string html = String.Empty;
-                foreach (var studentDetail in Detail)
+                string html1 = String.Empty;
+                string html2 = String.Empty;
                 {
-                    int Id = studentDetail.Id;
-                    string Name = studentDetail.Name;
-                    string Address = studentDetail.Address;
-                    html = WelcomeHTML(Id, Name, Address);
+                    
+                    foreach (var studentDetail in Detail)
+                    {
+                        
+                        int Id = studentDetail.Id;
+                        string Name = studentDetail.Name;
+                        string Address = studentDetail.Address;
+                        
+                        html = supportingHTML(Id, Name, Address);
+                        html1 = html1 + html;
+
+                        html2 = WelcomeHTML(html1); // No use of supportingHTML is happening here
+                    }
                 }
-                return base.Content(html, "text/html");
+
+                return new ContentResult
+                {
+                    //Content = htmltitle,
+                    Content = html2 ,
+                    ContentType = MediaTypeNames.Text.Html,
+                    StatusCode = 200                  
+                };
+                //return base.Content(html, "text/html");
             }
         }
-        private string WelcomeHTML(int Id, string Name, string Address)
+
+        private string supportingHTML(int Id, string Name, string Address)
         {
-            var html = System.IO.File.ReadAllText(@"./HtmlRender/index.html");
+            var html = System.IO.File.ReadAllText(@"./HtmlRender/htmlpage.html");
             html = html.Replace("{{Id}}", Id.ToString());
             html = html.Replace("{{Name}}", Name);
             html = html.Replace("{{Address}}", Address);
+            // html = html.app
             return html;
         }
-        [HttpGet("fffff")]
-        public ActionResult DisplayWebPage()
+        private string WelcomeHTML(string html1)
         {
-            return Content("<html><p><i>Hello! You are trying to view <u>something!</u></i></p></html>", "text/html");
+            var html = System.IO.File.ReadAllText(@"./HtmlRender/index.html");
+            html = html.Replace("{{htmlData}}", html1);
+            
+           // html = html.app
+            return html;
+        }
+        
+        [HttpGet("fffff")]
+        //public ActionResult DisplayWebPage()
+        //{
+        //    return Content("<html><p><i>Hello! You are trying to view <u>something!</u></i></p></html>", "text/html");
+        //}
+        public ContentResult Index()
+        {
+            return Content("<h3>Here's a custom content header</h3>", "text/html", System.Text.Encoding.UTF8);
         }
 
         // GET: api/StudentDetails/5
@@ -124,10 +159,10 @@ namespace StudentAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<StudentDetail>> PostStudentDetail(StudentDetail studentDetail)
         {
-          if (_context.StudentDetails == null)
-          {
-              return Problem("Entity set 'StudentContext.StudentDetails'  is null.");
-          }
+            if (_context.StudentDetails == null)
+            {
+                return Problem("Entity set 'StudentContext.StudentDetails'  is null.");
+            }
             _context.StudentDetails.Add(studentDetail);
             await _context.SaveChangesAsync();
 
@@ -142,13 +177,13 @@ namespace StudentAPI.Controllers
             {
                 return NotFound();
             }
-            var studentDetail = await _context.StudentDetails.FindAsync(id);
-            if (studentDetail == null)
+            var studentDetail345 = await _context.StudentDetails.FindAsync(id);
+            if (studentDetail345 == null)
             {
                 return NotFound();
             }
 
-            _context.StudentDetails.Remove(studentDetail);
+            _context.StudentDetails.Remove(studentDetail345);
             await _context.SaveChangesAsync();
 
             return NoContent();
