@@ -17,6 +17,7 @@ namespace StudentAPI.Models
         }
 
         public virtual DbSet<StudentDetail> StudentDetails { get; set; } = null!;
+        //public virtual DbSet<GenericModel> GenericModels { get; set; } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
