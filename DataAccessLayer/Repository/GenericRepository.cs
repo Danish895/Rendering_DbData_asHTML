@@ -1,22 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudentAPI.Core.IRepositories;
+using StudentAPI.DataAccessLayer.Context;
 using StudentAPI.Models;
 
-namespace StudentAPI.Core.Repositories
+namespace StudentAPI.DataAccessLayer.Repository
 {
-    public class GenericRepository <T> : IGenericRepository <T> where T : class
+    public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected StudentContext _context;
         protected DbSet<T> dbSet;
-        protected readonly ILogger _logger;
+       // protected readonly ILogger _logger;
 
         public GenericRepository(
-            StudentContext context,
-            ILogger logger
+            StudentContext context
+            //ILogger logger
         )
         {
             _context = context;
-            _logger = logger;
+            //_logger = logger;
             this.dbSet = context.Set<T>();
         }
 
@@ -47,6 +47,4 @@ namespace StudentAPI.Core.Repositories
             throw new NotImplementedException();
         }
     }
-
 }
-

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using StudentAPI.Models;
 
-namespace StudentAPI.Models
+namespace StudentAPI.DataAccessLayer.Context
 {
     public partial class StudentContext : DbContext
     {

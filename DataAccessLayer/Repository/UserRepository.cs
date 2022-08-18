@@ -1,17 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StudentAPI.Core.IRepositories;
+using StudentAPI.DataAccessLayer.Context;
 using StudentAPI.Models;
 
-namespace StudentAPI.Core.Repositories
+namespace StudentAPI.DataAccessLayer.Repository
 {
-    public class UserRepository : GenericRepository<StudentDetail> , IUserRepository
+    public class UserRepository : GenericRepository<StudentDetail>, IUserRepository, IDisposable
     {
+        //private readonly StudentContext _context;
+       // private readonly ILogger _logger;
+        public IUserRepository StudentDetails { get; private set; }
         public UserRepository(
-            StudentContext context,
-            ILogger  logger
-        ) : base(context, logger)
+            StudentContext context
+            //ILoggerFactory loggerFactory,
+            //ILogger logger
+        ) : base(context)
         {
+            //_context = context;
+            //_logger = logger;
+
+            //StudentDetails = new UserRepository(_context);
         }
+
         public override async Task<IEnumerable<StudentDetail>> All()
         {
             try
@@ -20,8 +29,10 @@ namespace StudentAPI.Core.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} All method error", typeof(UserRepository));
-                return new List<StudentDetail>();
+                Console.WriteLine("Erroe in calling");
+                //_logger.LogError(ex, "{Repo} All method error", typeof(UserRepository));
+                return new List<StudentDetail>() { };
+
             }
         }
 
@@ -32,7 +43,7 @@ namespace StudentAPI.Core.Repositories
                 var existingUser = await dbSet.Where(x => x.Id == entity.Id)
                 .FirstOrDefaultAsync();
                 if (existingUser == null)
-                return await Add(entity);
+                    return await Add(entity);
 
                 existingUser.Name = entity.Name;
                 existingUser.Address = entity.Address;
@@ -41,7 +52,7 @@ namespace StudentAPI.Core.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Upsert method error", typeof(UserRepository));
+                //_logger.LogError(ex, "{Repo} Upsert method error", typeof(UserRepository));
                 return false;
             }
         }
@@ -60,9 +71,17 @@ namespace StudentAPI.Core.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete method error", typeof(UserRepository));
+                //_logger.LogError(ex, "{Repo} Delete method error", typeof(UserRepository));
                 return false;
             }
+        }
+        public async Task CompleteAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

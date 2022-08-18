@@ -3,7 +3,9 @@ using StudentAPI.Models;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using static StudentAPI.Controllers.StudentDetailsController;
-using StudentAPI.Core.IConfiguration;
+
+using StudentAPI.DataAccessLayer.Repository;
+using StudentAPI.DataAccessLayer.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,9 @@ builder.Services.AddDbContext<StudentContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddDirectoryBrowser();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+//builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
