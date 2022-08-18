@@ -10,12 +10,10 @@ namespace StudentAPI.Models
         public StudentContext()
         {
         }
-
         public StudentContext(DbContextOptions<StudentContext> options)
             : base(options)
         {
         }
-
         public virtual DbSet<StudentDetail> StudentDetails { get; set; } = null!;
         //public virtual DbSet<GenericModel> GenericModels { get; set; } 
 
@@ -43,3 +41,4 @@ namespace StudentAPI.Models
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
+
