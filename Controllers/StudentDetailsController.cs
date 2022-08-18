@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Models;
 using StudentAPI.Extensions;
-
+using StudentAPI.Core.IConfiguration;
 
 namespace StudentAPI.Controllers
 {
@@ -12,12 +12,20 @@ namespace StudentAPI.Controllers
 
     public class StudentDetailsController : ControllerBase
     {
+        private readonly ILogger<StudentDetailsController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly StudentContext _context;
        // private readonly StudentContext _context;
 
-        public StudentDetailsController(StudentContext context)
+        public StudentDetailsController(
+            StudentContext context,
+            ILogger<StudentDetailsController> logger,
+            IUnitOfWork unitOfWork
+            )
         {
             _context = context;
+            _logger = logger;
+            _unitOfWork = unitOfWork;
         }    
 
         // GET: api/StudentDetails
@@ -27,12 +35,12 @@ namespace StudentAPI.Controllers
         public async Task<ActionResult<IEnumerable<StudentDetail>>> GetStudentDetails()
         { 
             //return await _context.StudentDetails.ToListAsync();
-            if (_context.StudentDetails == null)
+            if (_unitOfWork.StudentDetails == null)
             {
               return NotFound();
             }
-            
-            List<StudentDetail> Detail = await _context.StudentDetails.ToListAsync();
+
+            var Detail = await _unitOfWork.StudentDetails.All();
             {
                 var html = System.IO.File.ReadAllText(@"./HtmlRender/htmlpage.html");
                 string html1 = String.Empty;

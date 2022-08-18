@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "GDFyBYz5sl9UD0dxWyZffBVNsYg013ob6kE3q2xqA9l2nCTYGuOyU8g1VwNMqV4ECY5/W3Dwto/jZ2xe9stbog==",
+  "dgSpecHash": "Rp/giaRUuavd38A8pZJIQySos0cHlIF9aI6bJB33tolVYmbgEVFJ3N20WDVTAdx2jYyw2bKOR4w0g47QZdh6Jg==",
   "success": true,
   "projectFilePath": "C:\\Users\\danis\\source\\repos\\StudentAPI\\StudentAPI\\StudentAPI.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\danis\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
     "C:\\Users\\danis\\.nuget\\packages\\messagepack.annotations\\2.1.152\\messagepack.annotations.2.1.152.nupkg.sha512",
     "C:\\Users\\danis\\.nuget\\packages\\messagepackanalyzer\\2.1.152\\messagepackanalyzer.2.1.152.nupkg.sha512",
+    "C:\\Users\\danis\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\6.0.8\\microsoft.aspnetcore.diagnostics.entityframeworkcore.6.0.8.nupkg.sha512",
     "C:\\Users\\danis\\.nuget\\packages\\microsoft.aspnetcore.hosting.abstractions\\2.2.0\\microsoft.aspnetcore.hosting.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\danis\\.nuget\\packages\\microsoft.aspnetcore.hosting.server.abstractions\\2.2.0\\microsoft.aspnetcore.hosting.server.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\danis\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",
