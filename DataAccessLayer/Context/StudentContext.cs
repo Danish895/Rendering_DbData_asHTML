@@ -15,7 +15,7 @@ namespace StudentAPI.DataAccessLayer.Context
             : base(options)
         {
         }
-        public virtual DbSet<StudentDetail> StudentDetails { get; set; } = null!;
+        public virtual DbSet<StudentDetail> StudentDetails { get; set; }
         //public virtual DbSet<GenericModel> GenericModels { get; set; } 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

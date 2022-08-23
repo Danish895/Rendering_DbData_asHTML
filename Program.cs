@@ -6,6 +6,7 @@ using static StudentAPI.Controllers.StudentDetailsController;
 
 using StudentAPI.DataAccessLayer.Repository;
 using StudentAPI.DataAccessLayer.Context;
+using StudentAPI.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,9 @@ builder.Services.AddDbContext<StudentContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddDirectoryBrowser();
-//builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 var app = builder.Build();

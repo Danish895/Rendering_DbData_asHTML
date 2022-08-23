@@ -5,6 +5,7 @@ using StudentAPI.Models;
 using StudentAPI.Extensions;
 using StudentAPI.DataAccessLayer.Repository;
 using StudentAPI.DataAccessLayer.Context;
+using StudentAPI.Service;
 
 namespace StudentAPI.Controllers
 {
@@ -14,21 +15,19 @@ namespace StudentAPI.Controllers
     public class StudentDetailsController : ControllerBase
     {
         private readonly ILogger<StudentDetailsController> _logger;
-        private readonly IUserRepository _UserRepository;
-        private readonly StudentContext _context;
-       // private readonly StudentContext _context;
+        //private readonly StudentContext _context;
+        private IUserService _UserService;
 
         public StudentDetailsController(
             StudentContext context,
             ILogger<StudentDetailsController> logger,
-            IUserRepository UserRepository
+            IUserService UserService
             )
         {
-            _context = context;
+            //_context = context;
             _logger = logger;
-            _UserRepository = UserRepository;
+            _UserService = UserService;
         }    
-        //jkjkjk
         // GET: api/StudentDetails
         [HttpGet]
         //[Produces("text/html")]
@@ -36,12 +35,12 @@ namespace StudentAPI.Controllers
         public async Task<ActionResult<IEnumerable<StudentDetail>>> GetStudentDetails()
         { 
             //return await _context.StudentDetails.ToListAsync();
-            if (_UserRepository.StudentDetails == null)
-            {
-              return NotFound();
-            }
+            //if (_UserService.All() == null)
+            //{
+            //  return NotFound();
+            //}
 
-            var Detail = await _UserRepository.StudentDetails.All();
+            var Detail = await _UserService.All();
             {
                 var html = System.IO.File.ReadAllText(@"./HtmlRender/htmlpage.html");
                 string html1 = String.Empty;
@@ -97,31 +96,30 @@ namespace StudentAPI.Controllers
             return html;
         }
 
-        [HttpGet("GetClass")]
-        public async Task<ActionResult<IEnumerable<StudentDetail>>> GetDetails()
-        {
-            Console.WriteLine("We are getting class , fields and its values");
+        //[HttpGet("GetClass")]
+        //public async Task<ActionResult<IEnumerable<StudentDetail>>> GetDetails()
+        //{
+        //    Console.WriteLine("We are getting class , fields and its values");
 
-            StudentDetail detailModel = new StudentDetail()
+        //    StudentDetail detailModel = new StudentDetail()
             
-            { Name = "QWERTY", Address = "RemoteState" };
+        //    { Name = "QWERTY", Address = "RemoteState" };
             
             
-            detailModel.getClassFieldsValues();
+        //    detailModel.getClassFieldsValues();
 
-            return Ok();
-        }
+        //    return Ok();
+        //}
 
-            // GET: api/StudentDetails/5
-            [HttpGet("{id}")]
+        // GET: api/StudentDetails/5
+        [HttpGet("{id}")]
         public async Task<ActionResult<StudentDetail>> GetStudentDetail(int id)
         {
-          if (_context.StudentDetails == null)
-          {
-              return NotFound();
-          }
-            var studentDetail = await _context.StudentDetails.FindAsync(id);
-
+            if (_UserService.getStudentById == null)
+            {
+                return NotFound();
+            }
+            var studentDetail = await _UserService.getStudentById(id);
             if (studentDetail == null)
             {
                 return NotFound();
@@ -133,28 +131,10 @@ namespace StudentAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStudentDetail(int id, StudentDetail studentDetail)
         {
-            if (id != studentDetail.Id)
-            {
-                return BadRequest();
-            }
-            _context.Entry(studentDetail).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StudentDetailExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-            return NoContent();
+            
+            await _UserService.update(id, studentDetail);
+            await _UserService.CompleteAsync();
+            return CreatedAtAction("GetStudentDetail", new { id = studentDetail.Id }, studentDetail);
         }
 
         // POST: api/StudentDetails
@@ -162,39 +142,33 @@ namespace StudentAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<StudentDetail>> PostStudentDetail(StudentDetail studentDetail)
         {
-            if (_context.StudentDetails == null)
+            if (_UserService.addStudent == null)
             {
                 return Problem("Entity set 'StudentContext.StudentDetails'  is null.");
             }
-            _context.StudentDetails.Add(studentDetail);
-            await _context.SaveChangesAsync();
+            _UserService.addStudent(studentDetail);
+            //await _context.SaveChangesAsync();
+            _UserService.CompleteAsync();
 
             return CreatedAtAction("GetStudentDetail", new { id = studentDetail.Id }, studentDetail);
         }
 
+
         // DELETE: api/StudentDetails/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudentDetail(int id)
+        public async Task<ActionResult<StudentDetail>> DeleteStudentDetail(int id)
         {
-            if (_context.StudentDetails == null)
+            if (_UserService.deleteById(id) == null)
             {
                 return NotFound();
             }
-            var studentDetail345 = await _context.StudentDetails.FindAsync(id);
-            if (studentDetail345 == null)
-            {
-                return NotFound();
-            }
-
-            _context.StudentDetails.Remove(studentDetail345);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var studentDetail = await _UserService.deleteById(id);
+            await _UserService.CompleteAsync();
+            return studentDetail;
         }
-
-        private bool StudentDetailExists(int id)
-        {
-            return (_context.StudentDetails?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        //private bool StudentDetailExists(int id)
+        //{
+        //    return (_context.StudentDetails?.Any(e => e.Id == id)).GetValueOrDefault();
+        //}
     }
 }
